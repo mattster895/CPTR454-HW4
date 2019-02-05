@@ -48,6 +48,9 @@ for point in range(pointsNum):
 
 S.sort(key=lambda tup: tup[0])
 
+for x in S:
+    print(x)
+
 def leftRightSort(point1,point2,point3,leftList,rightList):
     sortTest = ((point1[0]*point2[1])+(point3[0]*point1[1])+(point2[0]*point3[1])-(point3[0]*point2[1])-(point2[0]*point1[1])-(point1[0]*point3[1]))
     if(sortTest>0):
@@ -69,44 +72,46 @@ def maxPoint(point1,point2,max_point_list):
     return max_point
 
 # 1) Determine the farthest "left" and farthest "right" points
+
 xMin = S[0]
 xMax = S[len(S)-1]
-print("Min: ",S[0])
-print("Max: ",S[len(S)-1])
-
 S.pop(0)
 S.pop()
+
+Hull_List = []
+Hull_List.append(xMin)
+Hull_List.append(xMax)
+
 
 # 2) Sort points as left or right of the line from xMin to xMax
 S1 = []
 S2 = []
 
+
 for point in S:
     leftRightSort(xMin,xMax,point,S1,S2)
-print("Left of Line")
-for x in S1:
-    print(x)
-
-print("Right of Line")
-for x in S2:
-    print(x)
 
 #Hull Work
-def hullWork(hull_min,hull_max,working_points):
+def hullWork(hull_min,hull_max,working_points,Hull_List):
     Sx = []
     Sy = []
     Sgarbage = []
     max_point = maxPoint(hull_min, hull_max, working_points)
     if(max_point != (0,0)):
-        print("Hull Point: ", max_point)
+        if max_point not in Hull_List:
+            Hull_List.append(max_point)
         for point in working_points:
             leftRightSort(hull_min,max_point,point,Sx,Sgarbage)
-            hullWork(hull_min,max_point,Sx)
+            hullWork(hull_min,max_point,Sx,Hull_List)
             leftRightSort(max_point,hull_max,point,Sy,Sgarbage)
-            hullWork(max_point,hull_max,Sy)
+            hullWork(max_point,hull_max,Sy,Hull_List)
     else:
         return
 
 
-hullWork(xMin,xMax,S1)
-hullWork(xMax,xMin,S2)
+hullWork(xMin,xMax,S1,Hull_List)
+hullWork(xMax,xMin,S2,Hull_List)
+
+print("Hull Points")
+for x in Hull_List:
+    print(x)
