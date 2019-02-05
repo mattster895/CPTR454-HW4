@@ -26,6 +26,7 @@
 
 import sys
 import random
+import math
 
 #print("This is the name of the script: ",sys.argv[0])
 #print("Number of arguments: ",len(sys.argv))
@@ -68,6 +69,19 @@ for point in S:
     else:
         S2.append(point)
 
+maxPoint = (0,0)
+maxDist = 0.0
+for point in S1:
+    testDist0 = abs((xMax[1]-xMin[1])*point[0]-(xMax[0]-xMin[0])*point[1]+(xMax[0]*xMin[1])-(xMax[1]*xMin[0]))
+    testDist1 = ((xMax[1]-xMin[1])**2+(xMax[0]-xMin[0])**2)**(1/2)
+    testDist = testDist0/testDist1
+    print(point)
+    print(testDist)
+    if(testDist>maxDist):
+        maxDist = testDist
+        maxPoint = point
+
+print("MaxPoint 1:",maxPoint)
 
 
 print("Left of Line")
