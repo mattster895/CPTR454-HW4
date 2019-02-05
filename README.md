@@ -8,4 +8,4 @@ must be well formatted and commented. You may use any programming language.
 Implement quickhull in the language of your choice.
 
 ## Usage
-`>python FennellQuickhull.py [desired number of random points]`
+`> python FennellQuickhull.py [desired number of random points]`
