@@ -48,6 +48,25 @@ for point in range(pointsNum):
 
 S.sort(key=lambda tup: tup[0])
 
+def leftRightSort(point1,point2,point3,leftList,rightList):
+    sortTest = ((point1[0]*point2[1])+(point3[0]*point1[1])+(point2[0]*point3[1])-(point3[0]*point2[1])-(point2[0]*point1[1])-(point1[0]*point3[1]))
+    if(sortTest>0):
+        leftList.append(point3)
+    else:
+        rightList.append(point3)
+    return
+
+def maxPoint(point1,point2,max_point_list):
+    max_point = (0,0)
+    max_dist = 0.0
+    for check_point in max_point_list:
+        test_dist0 = abs((point2[1]-point1[1])*check_point[0]-(point2[0]-point1[0])*check_point[1]+(point2[0]*point1[1])-(point2[1]*point1[0]))
+        test_dist1 = ((point2[1]-point1[1])**2+(point2[0]-point1[0])**2)**(1/2)
+        test_dist = test_dist0/test_dist1
+        if(test_dist>max_dist):
+            max_dist = test_dist
+            max_point = check_point
+    return max_point
 
 # 1) Determine the farthest "left" and farthest "right" points
 xMin = S[0]
@@ -63,27 +82,7 @@ S1 = []
 S2 = []
 
 for point in S:
-    triArea = (1/2)*((xMin[0]*xMax[1])+(point[0]*xMin[1])+(xMax[0]*point[1])-(point[0]*xMax[1])-(xMax[0]*xMin[1])-(xMin[0]*point[1]))
-    if(triArea>0):
-        S1.append(point)
-    else:
-        S2.append(point)
-
-maxPoint = (0,0)
-maxDist = 0.0
-for point in S1:
-    testDist0 = abs((xMax[1]-xMin[1])*point[0]-(xMax[0]-xMin[0])*point[1]+(xMax[0]*xMin[1])-(xMax[1]*xMin[0]))
-    testDist1 = ((xMax[1]-xMin[1])**2+(xMax[0]-xMin[0])**2)**(1/2)
-    testDist = testDist0/testDist1
-    print(point)
-    print(testDist)
-    if(testDist>maxDist):
-        maxDist = testDist
-        maxPoint = point
-
-print("MaxPoint 1:",maxPoint)
-
-
+    leftRightSort(xMin,xMax,point,S1,S2)
 print("Left of Line")
 for x in S1:
     print(x)
@@ -91,3 +90,23 @@ for x in S1:
 print("Right of Line")
 for x in S2:
     print(x)
+
+#Hull Work
+def hullWork(hull_min,hull_max,working_points):
+    Sx = []
+    Sy = []
+    Sgarbage = []
+    max_point = maxPoint(hull_min, hull_max, working_points)
+    if(max_point != (0,0)):
+        print("Hull Point: ", max_point)
+        for point in working_points:
+            leftRightSort(hull_min,max_point,point,Sx,Sgarbage)
+            hullWork(hull_min,max_point,Sx)
+            leftRightSort(max_point,hull_max,point,Sy,Sgarbage)
+            hullWork(max_point,hull_max,Sy)
+    else:
+        return
+
+
+hullWork(xMin,xMax,S1)
+hullWork(xMax,xMin,S2)
